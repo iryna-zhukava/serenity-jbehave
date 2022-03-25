@@ -2,6 +2,7 @@ import net.serenitybdd.core.di.WebDriverInjectors;
 import net.serenitybdd.jbehave.SerenityReporter;
 import net.serenitybdd.jbehave.SerenityStories;
 import net.thucydides.core.webdriver.DriverConfiguration;
+import org.jbehave.core.annotations.BeforeStories;
 import org.jbehave.core.configuration.Configuration;
 import org.jbehave.core.configuration.MostUsefulConfiguration;
 import org.jbehave.core.embedder.Embedder;
@@ -23,10 +24,11 @@ import org.reflections.scanners.Scanner;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static com.codeborne.selenide.Selenide.open;
 import static org.jbehave.core.reporters.Format.*;
 
 public class StoryRunner extends SerenityStories {
-    private static final String STEPS_PACKAGE = "projects";
+    private static final String STEPS_PACKAGE = "steps";
     private static final String RESOURCES_PATH = "src/test/resources";
     private static final String STORY_PATH_TEMPLATE = "stories/%s.story";
     private static final String STORY_ENV_VARIABLE = "story";
@@ -37,11 +39,12 @@ public class StoryRunner extends SerenityStories {
     @Override
     public InjectableStepsFactory stepsFactory() {
         List<Steps> stepFileList = new ArrayList();
-        Reflections reflections = new Reflections("steps", new Scanner[0]);
+        Reflections reflections = new Reflections(STEPS_PACKAGE, new Scanner[0]);
         Set<Class<? extends Steps>> allClasses = reflections.getSubTypesOf(Steps.class);
         allClasses.forEach((aClass) -> {
             try {
                 Steps step = (Steps) aClass.newInstance();
+
                 stepFileList.add(step);
             } catch (IllegalAccessException | InstantiationException var4) {
                 var4.toString();
@@ -53,9 +56,9 @@ public class StoryRunner extends SerenityStories {
 
     @Override
     public List<String> storyPaths() {
-        String storyToInclude = System.getenv("story");
-        String storyPath = String.format("stories/%s.story", storyToInclude);
-        return (new StoryFinder()).findPaths("src/test/resources", storyPath, (String) null);
+        String storyToInclude = System.getenv(STORY_ENV_VARIABLE);
+        String storyPath = String.format(STORY_PATH_TEMPLATE, storyToInclude);
+        return (new StoryFinder()).findPaths(RESOURCES_PATH, storyPath, (String) null);
     }
 
 //    @Override
