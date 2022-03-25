@@ -1,0 +1,35 @@
+
+plugins {
+    id 'java'
+
+        id "net.serenity-bdd.serenity-gradle-plugin" version "2.6.0"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.reflections/reflections
+    implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
+    //stabilization for twilio sdk
+// https://mvnrepository.com/artifact/commons-codec/commons-codec
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+// https://mvnrepository.com/artifact/net.serenity-bdd/serenity-core
+    implementation group: 'net.serenity-bdd', name: 'serenity-core', version: '3.0.0'
+    implementation 'net.serenity-bdd:serenity-jbehave:1.42.0'
+
+// https://mvnrepository.com/artifact/com.codeborne/selenide
+    implementation group: 'com.codeborne', name: 'selenide', version: '5.25.0'
+// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-server
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-server', version: '3.141.59'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
